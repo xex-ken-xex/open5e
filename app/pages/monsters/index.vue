@@ -1,7 +1,7 @@
 <template>
   <section class="docs-container container">
-    <div class="flex">
-      <h1 class="my-2 w-full">
+    <div class="flex w-full">
+      <h1 class="my-2 text-nowrap">
         Monsters
       </h1>
 
@@ -111,7 +111,7 @@
                       'button',
                       {
                         class:
-                          'p-1 text-sm font-medium text-white bg-blood rounded hover:bg-blood/80',
+                          'p-1 text-sm font-medium text-white bg-red rounded hover:bg-blood/80',
                         onClick: () => removeFromEncounter(data),
                       },
                       h(MinusIcon, { class: 'w-4 h-4' }),
@@ -120,7 +120,7 @@
                     'button',
                     {
                       'class':
-                        'p-1 text-sm font-medium text-white bg-blood rounded hover:bg-blood/80',
+                        'p-1 text-sm font-medium text-white bg-red rounded hover:bg-blood/80',
                       'onClick': () => addToEncounter(data),
                       'data-testid': 'add-to-encounter',
                     },

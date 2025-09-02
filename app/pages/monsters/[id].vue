@@ -10,25 +10,15 @@
       </h1>
 
       <div class="flex flex-none items-start gap-2">
-        <!-- <button           class="flex items-center gap-1 rounded-md p-1 text-xs text-blood outline outline-1 outline-blood hover:bg-blood hover:text-white"
-          @click="toggleMode()">
-          <icon
-            :name="
-              mode === 'compact'
-                ? 'heroicons:arrows-pointing-out'
-                : 'heroicons:arrows-pointing-in'
-            "
-          />
-          {{ mode === 'compact' ? 'Regular statblock' : 'Compact statblock' }}</button> -->
         <button
           v-if="monsterInEncounter"
-          class="flex h-8 items-center gap-2 rounded bg-blood px-3 py-1.5 text-sm font-medium text-white hover:bg-blood/80 lg:flex"
+          class="red-red flex h-8 items-center gap-2 rounded bg-red px-3 py-1.5 text-sm font-medium text-white hover:bg-red-300 lg:flex"
           @click="removeFromEncounter"
         >
           <Icon name="heroicons:minus" />
         </button>
         <button
-          class="rounded bg-blood px-2 py-1 text-sm font-medium text-white hover:bg-blood/80 dark:bg-blood dark:hover:bg-red-400"
+          class="h-8 rounded bg-red px-2 py-1 text-sm font-medium text-white hover:bg-red-300"
           data-testid="add-to-encounter"
           @click="addToEncounter"
         >
@@ -38,8 +28,8 @@
     </div>
 
     <img
-      v-if="mode !== 'compact' && monster.illustration"
-      :src="useRuntimeConfig().public.apiUrl + monster.illustration.file_url"
+      v-if="monster.img_main"
+      :src="monster.img_main"
       :alt="monster.name"
       class="img-main"
     />
@@ -324,22 +314,12 @@
         <Icon name="heroicons:arrow-top-right-on-square-20-solid" />
       </a>
     </p>
-    <p class="text-sm italic">
-      Compact Statblock:
-      <nuxt-link
-        tag="a"
-        :params="{ id: monster.slug }"
-        :to="`/monsters/compact/${monster.slug}`"
-        :prefetch="false"
-      >
-        {{ monster.name }}
-      </nuxt-link>
-    </p>
   </main>
 </template>
 
 <script setup lang="ts">
-const route = useRoute();
+import { useEncounterStore } from '~/composables/useEncounter';
+
 const params = {
   environments__fields: 'name',
   document__fields: 'name,key,permalink',
@@ -439,23 +419,6 @@ const resistancesAndVulnerabilities = computed(() => {
     ...(conditionImmune && { 'Condition Immunities': conditionImmune }),
   };
 });
-
-const mode = ref(route.query.mode || 'normal');
-// function toggleMode() {
-//   switch (mode.value) {
-//     case 'compact':
-//       mode.value = 'normal';
-//       break;
-//     default:
-//       mode.value = 'compact';
-//       break;
-//   }
-
-//   navigateTo({
-//     path: `/monsters/${route.params.id}`,
-//     query: mode.value === 'compact' ? { mode: 'compact' } : null,
-//   });
-// }
 
 const encounterStore = useEncounterStore();
 

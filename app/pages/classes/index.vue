@@ -1,11 +1,10 @@
 <template>
   <section class="docs-container container">
-    <div class="flex">
-      <h1 class="my-2">
-        Classes
-      </h1>
+    <div class="grid w-full grid-cols-2">
+      <h1 class="my-2 w-screen">Classes</h1>
+      
       <ResultsTablePaginator
-        class="w-full"
+        class="w-min-content w-full"
         :page-number="pageNo"
         :last-page-number="lastPageNo"
         :items-per-page="itemsPerPage || 1"

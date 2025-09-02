@@ -2,115 +2,71 @@
   <!-- BACKGROUND (visible behind page content at wide screen widths)       -->
   <!-- bg-radial-gradiant arbitrary classes generate the dotted bg pattern  -->
   <div
-    class="grid justify-center overflow-hidden bg-fog bg-[radial-gradient(#ddd_1px,transparent_1px)] [background-size:16px_16px] dark:bg-darkness dark:bg-[radial-gradient(#222_1px,transparent_1px)]"
+    class="grid min-h-screen justify-center overflow-hidden bg-white bg-[radial-gradient(#ddd_1px,transparent_1px)] [background-size:16px_16px] dark:bg-darkness dark:bg-[radial-gradient(#222_1px,transparent_1px)]"
   >
     <div
-      class="bg-dark m-auto grid h-full min-h-screen max-w-[1440px] grid-flow-col transition-all sm:ml-0 sm:w-screen sm:grid-cols-[14rem_1fr] sm:overflow-y-auto sm:transition-none"
-      :class="showSidebar ? 'ml-56' : '-ml-56'"
+      class="flex h-full max-w-[1440px] transition-all sm:mx-0 sm:w-screen sm:overflow-y-auto sm:transition-none"
+      :class="`
+        ${isNavbarVisible ? 'ml-0 -mr-[18rem]' : '-ml-56'} 
+        ${isToolbarVisible ? 'mr-14 -pl-16': '-mr-16'}`"
     >
-      <!-- Sidebar -->
-      <div
-        class="z-50 flex h-full w-56 flex-col overflow-y-auto bg-slate-700 text-white dark:bg-charcoal"
-      >
-        <!-- Logo -->
-        <NuxtLink
-          to="/"
-          class="bg-red p-5 font-serif text-3xl text-white hover:text-white"
-        >
-          Open5e
-        </NuxtLink>
-
-        <SourceSelector />
-
-        <!-- SEARCH BAR -->
-        <div class="relative">
-          <div
-            class="absolute inset-y-0 right-0 flex cursor-pointer items-center pr-2"
-          >
-            <Icon
-              name="majesticons:search-line"
-              class="size-8 rounded-full bg-red-900/25 p-1 text-white hover:bg-red-900/50"
-              aria-hidden="true"
-              @click="doSearch(searchText)"
-            />
-          </div>
-          <input
-            v-model="searchText"
-            class="w-full bg-red-700 p-4 placeholder:font-semibold placeholder:text-white/80 focus:border-0 focus:bg-red-800 focus:outline-none dark:bg-red-800 dark:focus:bg-red-600"
-            placeholder="Search Open5e"
-            @keyup.enter="doSearch(searchText)"
-          />
-        </div>
-
-        <!-- Sidebar Navigation -->
-        <NavMenu />
-
-        <!-- Report Issue UI -->
-        <ModalReportIssue />
-
-        <!-- Patron Banner -->
-        <a href="https://www.patreon.com/open5e">
-          <img
-            src="/img/patron-badge.png"
-            class="block w-full"
-            alt="Become a patron! Keep Open5e ad free!"
-          />
-        </a>
-      </div>
+      <!-- Left sidebar -->
+      <aside class="z-50 flex h-full w-56 shrink-0 grow-0 basis-56  flex-col overflow-y-auto text-white dark:bg-charcoal">
+         <Navigation @on-link-clicked="hideSidebars" />
+      </aside>
 
       <!-- Page central column -->
-      <div
-        class="content-wrapper w-screen overflow-y-auto bg-white text-darkness dark:bg-darkness dark:text-white sm:w-full"
-      >
-        <!-- Site Header -->
+      <div class="content-wrapper w-screen grow overflow-y-auto overflow-x-hidden bg-white text-darkness dark:bg-darkness dark:text-white sm:w-full">
 
-        <div class="flex h-12 items-center gap-1 px-2 sm:pl-8">
-          <SidebarToggle class="sm:hidden" @click="toggleSidebar" />
+        <!-- Site Header: Mobile -->
+        <header class="flex justify-between sm:hidden">
+          <SidebarToggle class="m-2 flex-none" @click="toggleSidebar" />
+
+          <NuxtLink
+            to="/"
+            class="p-2 pb-0 text-center font-serif text-2xl text-red dark:text-white"
+          >
+            Open5e
+          </NuxtLink>
+
+          <ToolBarToggle class="my-2 mr-4 flex-none" @btn-clicked="toggleToolbar" />
+        </header>
+        
+        <div class="-mt-3 grid h-min w-full justify-center gap-1 px-2 text-lg sm:m-4 sm:justify-start sm:pl-4">
           <BreadcrumbLinks class="grow" />
-          <EncounterBuilderSummary
-            v-if="!isEncounterVisible"
-            @show-encounter="showEncounter"
-          />
-          <ThemeSwitcher />
         </div>
 
-        <!-- Shade: fades out main content when sidebar expanded on mobile -->
-        <div
-          v-show="showSidebar"
-          class="fixed left-0 top-0 z-48 size-full bg-basalt/50 sm:hidden"
-          @click="hideSidebar"
-        />
-
-        <PageNotifications />
+        <PageNotifications class="z-60" />
 
         <!-- Main content -->
-        <div class="flex flex-col">
-          <div class="flex">
-            <div class="flex-1">
-              <nuxt-page
-                class="main-content pt-auto mx-0 w-full p-4 text-darkness dark:text-white sm:px-8"
-              />
-            </div>
-            <div
-              v-if="isEncounterVisible"
-              class="top-0 hidden w-80 shrink-0 border-l lg:block"
-            >
-              <EncounterBuilder @hide-encounter="isEncounterVisible = false" />
-            </div>
-          </div>
-        </div>
+        <nuxt-page
+          class="main-content pt-auto ml-0 mr-1 shrink-0 grow  p-4 text-darkness dark:text-white sm:px-8"
+        />
       </div>
+
+      <!-- Right sidebar -->
+      <div v-if="!isEncounterVisible" class="z-50 mr-2 bg-white dark:bg-darkness sm:h-auto">
+        <ToolBar @encounter-builder-clicked="toggleEncounter"/>
+      </div>
+      <div v-else class="top-0 z-50 mr-[17rem] mt-1 block h-min w-80 flex-initial shrink-0 border-granite sm:mr-1 sm:border-l">
+        <EncounterBuilder @hide-encounter="isEncounterVisible = false" />
+      </div>
+
     </div>
+    
     <AppFooter />
+
+
+    <!-- Shade: fades out main content when sidebar expanded on mobile -->
+    <div
+      v-show="isNavbarVisible || isToolbarVisible"
+      class="fixed left-0 top-0 z-48 size-full bg-basalt/50 sm:hidden"
+      @click="hideSidebars"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { useRoute } from 'nuxt/app';
-import { computed } from 'vue';
-import EncounterBuilder from '~/components/EncounterBuilder.vue';
-import EncounterBuilderSummary from '~/components/EncounterBuilderSummary.vue';
-
 // Generate page title from Breadcrumbs
 const BASE_TITLE = 'Open5e';
 const crumbs = useBreadcrumbs();
@@ -120,26 +76,18 @@ const title = computed(() => {
 });
 useHead({ title: title });
 
-const showSidebar = ref(false);
+const isToolbarVisible = ref(false);
+const toggleToolbar = () => (isToolbarVisible.value = !isToolbarVisible.value);
+const isNavbarVisible = ref(false);
+const toggleSidebar = () => (isNavbarVisible.value = !isNavbarVisible.value);
 const isEncounterVisible = ref(false);
-const route = useRoute();
-watch(
-  () => route.path,
-  () => (showSidebar.value = false),
-);
+const toggleEncounter = () => (isEncounterVisible.value = !isEncounterVisible.value);
+const hideSidebars = () => {
+  isNavbarVisible.value = false;
+  isToolbarVisible.value = false;
+  isEncounterVisible.value = false;
+};
 
-const searchText = ref(route.query.text);
-
-const router = useRouter();
-
-function doSearch(searchText) {
-  router.push({ name: 'search', query: { text: searchText } });
-  showSidebar.value = false;
-}
-
-const toggleSidebar = () => (showSidebar.value = !showSidebar.value);
-const hideSidebar = () => (showSidebar.value = false);
-const showEncounter = () => (isEncounterVisible.value = true);
 </script>
 
 <style>

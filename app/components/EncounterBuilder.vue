@@ -1,17 +1,20 @@
 <template>
-  <div class="mx-2 rounded-lg bg-white p-4 dark:bg-gray-800">
-    <div class="mb-4 flex items-center justify-between">
-      <h2 class="my-2 inline-block text-xl font-bold">
+  <div class="relative rounded-lg bg-white p-4 dark:bg-darkness dark:text-white">
+    <!-- Menu Header -->
+    <div class=" mb-4 flex items-center justify-between">
+      <h2 class="mt-0 inline-block text-xl font-bold">
         <Icon name="game-icons:crossed-swords" /> Encounter Builder
       </h2>
       <button
-        class="flex size-8 items-center justify-center rounded-full bg-fog hover:bg-smoke dark:bg-gray-900 hover:dark:bg-granite"
+        class="absolute right-2 top-1 flex size-10 items-center justify-center rounded-full bg-red text-lg text-white hover:bg-red-300"
         @click="$emit('hide-encounter')"
       >
+        <span class="sr-only">Close Encounter Builder Button</span>
         <Icon name="heroicons:x-mark" />
       </button>
     </div>
-    <div class="mb-2 border-b border-gray-200 pb-4 dark:border-gray-700">
+    
+    <div class="mb-2 border-b border-gray-200 pb-4 dark:border-granite">
       <EncounterBuilderPartyBuilder />
     </div>
 
@@ -73,7 +76,7 @@
         </div>
         <div class="flex gap-1">
           <button
-            class="rounded bg-blood px-1 py-0.5 text-sm font-medium text-white hover:bg-blood/80 dark:bg-blood dark:hover:bg-red-400"
+            class="rounded bg-red px-1 py-0.5 text-sm font-medium text-white hover:bg-blood/80 dark:bg-blood dark:hover:bg-red-400"
             data-testid="remove-monster"
             @click="removeMonster(monster.id)"
           >
@@ -85,7 +88,7 @@
             {{ monster.count }}
           </span>
           <button
-            class="rounded bg-blood px-1 py-0.5 text-sm font-medium text-white hover:bg-blood/80 dark:bg-blood dark:hover:bg-red-400"
+            class="rounded bg-red px-1 py-0.5 text-sm font-medium text-white hover:bg-blood/80 dark:bg-blood dark:hover:bg-red-400"
             data-testid="increment-monster"
             @click="incrementMonster(monster.id)"
           >
